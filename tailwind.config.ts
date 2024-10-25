@@ -3,10 +3,10 @@ import type { Config } from "tailwindcss";
 export default {
     darkMode: ["class"],
     content: ["./app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}"],
-  theme: {
+  	theme: {
   	extend: {
   		fontFamily: {
-  			sans: [\n          'Inter"',\n          "ui-sans-serif",\n          "system-ui",\n          "sans-serif",\n          'Apple Color Emoji"',\n          'Segoe UI Emoji"',\n          'Segoe UI Symbol"',\n          'Noto Color Emoji"',\n        ]
+  			sans: ['Inter"', "ui-sans-serif", "system-ui", "sans-serif", 'Apple Color Emoji"', 'Segoe UI Emoji"', 'Segoe UI Symbol"', 'Noto Color Emoji"']
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
