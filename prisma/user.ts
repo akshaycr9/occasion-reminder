@@ -3,8 +3,12 @@ import { User } from "~/interface/user.interface";
 
 const db = new PrismaClient();
 
-export const getAllUsers = async () => {
-    return await db.user.findMany();
+export const getAllUsers = async (q?: string) => {
+    let users = await db.user.findMany();
+    if(q) {
+        users = users.filter((user) => user.firstName.toLowerCase().includes(q.toLowerCase()) || user.lastName.toLowerCase().includes(q.toLowerCase()));
+    }
+    return users;
 }
 
 export const getUserById = async (id: number) => {
@@ -22,4 +26,10 @@ export const updateUser = async(userId: number, user: Omit<User, "id" | "created
         id: userId
     },
     data: user
+})
+
+export const deleteUser = async (userId: number) => await db.user.delete({
+    where: {
+        id: userId
+    }
 })

@@ -1,6 +1,14 @@
 import { LoaderFunction } from "@remix-run/node";
-import { Link, MetaFunction, Outlet, useLoaderData } from "@remix-run/react";
+import {
+  Link,
+  MetaFunction,
+  Outlet,
+  useLoaderData,
+  NavLink,
+  Form,
+} from "@remix-run/react";
 import { getAllUsers } from "prisma/user";
+import { useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { ScrollArea } from "~/components/ui/scroll-area";
@@ -14,19 +22,39 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const loader: LoaderFunction = async () => {
-  const users = await getAllUsers();
-  return users;
+export const loader: LoaderFunction = async ({ request }) => {
+  const url = new URL(request.url);
+  const q = url.searchParams.get("q");
+  const users = await getAllUsers(q as string);
+  return { users, q };
 };
 
 export default function Users() {
-  const users: User[] = useLoaderData();
+  const { users, q } = useLoaderData<typeof loader>() as {
+    users: User[];
+    q: string;
+  };
+
+  useEffect(() => {
+    const searchField = document.getElementById("q");
+    if (searchField instanceof HTMLInputElement) {
+      searchField.value = q || "";
+    }
+  }, [q]);
 
   return (
     <div className="flex w-screen h-screen overflow-hidden">
       <aside className="w-96 h-full">
         <div className="flex gap-4 p-4">
-          <Input placeholder="Search" type="search" name="search" />
+          <Form role="search" id="search-form">
+            <Input
+              placeholder="Search"
+              type="search"
+              name="q"
+              id="q"
+              defaultValue={q || ""}
+            />
+          </Form>
           <Link to="/users/create">
             <Button>Add User</Button>
           </Link>
@@ -35,10 +63,16 @@ export default function Users() {
         <ScrollArea className="h-full p-4">
           <ul className="flex flex-col gap-4">
             {users.map((user) => (
-              <li>
-                <Link to={`/users/${user.id}`} key={user.id}>
+              <li key={user.id}>
+                <NavLink
+                  to={`/users/${user.id}`}
+                  key={user.id}
+                  className={({ isActive }) =>
+                    isActive ? "font-bold" : "font-normal"
+                  }
+                >
                   {user.firstName} {user.lastName}
-                </Link>
+                </NavLink>
               </li>
             ))}
           </ul>

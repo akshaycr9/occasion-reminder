@@ -1,6 +1,12 @@
 import { User } from "@prisma/client";
 import { LoaderFunction } from "@remix-run/node";
-import { Form, json, Link, redirect, useLoaderData } from "@remix-run/react";
+import {
+  Form,
+  json,
+  redirect,
+  useLoaderData,
+  useNavigate,
+} from "@remix-run/react";
 import { getUserById, updateUser } from "prisma/user";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -28,6 +34,7 @@ export const action: LoaderFunction = async ({ request, params }) => {
 
 export default function EditUser() {
   const user = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
 
   return (
     <Form method="post">
@@ -44,7 +51,9 @@ export default function EditUser() {
       <Input type="date" name="dob" defaultValue={user.dob} />
       <Button type="submit">Submit</Button>
 
-      <Link to={`/users/${user.id}`}>Back</Link>
+      <Button type="button" onClick={() => navigate(-1)}>
+        Cancel
+      </Button>
     </Form>
   );
 }
