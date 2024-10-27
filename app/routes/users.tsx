@@ -4,15 +4,15 @@ import {
   MetaFunction,
   Outlet,
   useLoaderData,
-  NavLink,
+  json,
   Form,
+  useSubmit,
 } from "@remix-run/react";
 import { getAllUsers } from "prisma/user";
 import { useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { Separator } from "~/components/ui/separator";
+import UserList from "~/components/UserList";
 import { User } from "~/interface/user.interface";
 
 export const meta: MetaFunction = () => {
@@ -24,9 +24,9 @@ export const meta: MetaFunction = () => {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
-  const q = url.searchParams.get("q");
-  const users = await getAllUsers(q as string);
-  return { users, q };
+  const q = url.searchParams.get("q") || "";
+  const users = await getAllUsers(q);
+  return json({ users, q });
 };
 
 export default function Users() {
@@ -34,6 +34,8 @@ export default function Users() {
     users: User[];
     q: string;
   };
+
+  const submit = useSubmit();
 
   useEffect(() => {
     const searchField = document.getElementById("q");
@@ -43,45 +45,26 @@ export default function Users() {
   }, [q]);
 
   return (
-    <div className="flex w-screen h-screen overflow-hidden">
-      <aside className="w-96 h-full">
-        <div className="flex gap-4 p-4">
-          <Form role="search" id="search-form">
+    <div className="flex h-screen">
+      <aside className="w-1/3 p-4 border-r">
+        <div className="mb-4">
+          <Form method="get" onChange={(e) => submit(e.currentTarget)}>
             <Input
-              placeholder="Search"
               type="search"
               name="q"
-              id="q"
-              defaultValue={q || ""}
+              placeholder="Search users..."
+              className="mb-2"
             />
           </Form>
           <Link to="/users/create">
-            <Button>Add User</Button>
+            <Button className="w-full">Add New User</Button>
           </Link>
         </div>
-        <Separator />
-        <ScrollArea className="h-full p-4">
-          <ul className="flex flex-col gap-4">
-            {users.map((user) => (
-              <li key={user.id}>
-                <NavLink
-                  to={`/users/${user.id}`}
-                  key={user.id}
-                  className={({ isActive }) =>
-                    isActive ? "font-bold" : "font-normal"
-                  }
-                >
-                  {user.firstName} {user.lastName}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </ScrollArea>
+        <UserList users={users} />
       </aside>
-      <Separator orientation="vertical" />
-      <section className="flex-1 h-full">
+      <main className="w-2/3 p-4">
         <Outlet />
-      </section>
+      </main>
     </div>
   );
 }

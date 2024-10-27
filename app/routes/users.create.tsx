@@ -1,9 +1,7 @@
 import { ActionFunction } from "@remix-run/node";
-import { Form, Link, redirect } from "@remix-run/react";
+import { redirect } from "@remix-run/react";
 import { createUser } from "prisma/user";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
+import UserForm from "~/components/UserForm";
 import { User } from "~/interface/user.interface";
 
 export const action: ActionFunction = async ({ request }) => {
@@ -19,23 +17,5 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function CreateUser() {
-  return (
-    <Form method="post">
-      <Label htmlFor="firstName">First Name</Label>
-      <Input type="text" name="firstName" />
-
-      <Label htmlFor="lastName">Last Name</Label>
-      <Input type="text" name="lastName" />
-
-      <Label htmlFor="email">Email</Label>
-      <Input type="email" name="email" />
-
-      <Label htmlFor="dob">Date of Birth</Label>
-      <Input type="date" name="dob" />
-
-      <Button type="submit">Submit</Button>
-      <Button type="reset">Reset</Button>
-      <Link to="/users">Cancel</Link>
-    </Form>
-  );
+  return <UserForm />;
 }
