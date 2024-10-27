@@ -46,7 +46,7 @@ export default function Users() {
 
   return (
     <div className="flex h-screen">
-      <aside className="w-1/3 p-4 border-r">
+      <aside className="w-1/4 p-4 border-r">
         <div className="mb-4">
           <Form method="get" onChange={(e) => submit(e.currentTarget)}>
             <Input
@@ -62,7 +62,7 @@ export default function Users() {
         </div>
         <UserList users={users} />
       </aside>
-      <main className="w-2/3 p-4">
+      <main className="w-3/4 p-4">
         <Outlet />
       </main>
     </div>
