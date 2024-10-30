@@ -46,18 +46,22 @@ export default function Users() {
 
   return (
     <div className="flex h-screen">
-      <aside className="w-1/4 p-4 border-r">
-        <div className="mb-4">
-          <Form method="get" onChange={(e) => submit(e.currentTarget)}>
+      <aside className="w-1/4 p-4 border-r flex flex-col gap-4">
+        <div className="flex gap-4 w-full items-center">
+          <Form
+            className="w-full"
+            method="get"
+            onChange={(e) => submit(e.currentTarget)}
+          >
             <Input
               type="search"
               name="q"
               placeholder="Search users..."
-              className="mb-2"
+              defaultValue={q || ""}
             />
           </Form>
           <Link to="/users/create">
-            <Button className="w-full">Add New User</Button>
+            <Button className="">Add New User</Button>
           </Link>
         </div>
         <UserList users={users} />

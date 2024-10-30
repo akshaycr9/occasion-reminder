@@ -2,8 +2,12 @@ import { NavLink } from "@remix-run/react";
 import { User } from "~/interface/user.interface";
 
 export default function UserList({ users }: { users: User[] }) {
+  if (users.length === 0) {
+    return <p className="text-center">No users found</p>;
+  }
+
   return (
-    <ul className="space-y-2">
+    <ul className="flex flex-col gap-2 h-full overflow-y-auto">
       {users.map((user) => (
         <li key={user.id}>
           <NavLink
