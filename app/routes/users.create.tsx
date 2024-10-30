@@ -31,7 +31,10 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function CreateUser() {
-  const data = useActionData<typeof action>();
+  const data =
+    (useActionData<typeof action>() as {
+      error: Record<keyof User, string[]>;
+    }) || null;
 
   return <UserForm data={data} />;
 }

@@ -7,12 +7,14 @@ import {
   json,
   Form,
   useSubmit,
+  useLocation,
 } from "@remix-run/react";
 import { getAllUsers } from "prisma/user";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import UserList from "~/components/UserList";
+import { useDebounce } from "~/hooks/useDebounce";
 import { User } from "~/interface/user.interface";
 
 export const meta: MetaFunction = () => {
@@ -34,8 +36,11 @@ export default function Users() {
     users: User[];
     q: string;
   };
+  const [query, setQuery] = useState(q);
+  const [debouncedQuery, isDebouncing] = useDebounce(query, 500);
 
   const submit = useSubmit();
+  const location = useLocation();
 
   useEffect(() => {
     const searchField = document.getElementById("q");
@@ -44,24 +49,35 @@ export default function Users() {
     }
   }, [q]);
 
+  useEffect(() => {
+    let searchParams = new URLSearchParams(location.search);
+    if (debouncedQuery) {
+      searchParams.set("q", debouncedQuery);
+    } else {
+      searchParams.delete("q");
+    }
+    submit(searchParams, { method: "get" });
+  }, [debouncedQuery]);
+
   return (
     <div className="flex h-screen">
       <aside className="w-1/4 p-4 border-r flex flex-col gap-4">
-        <div className="flex gap-4 w-full items-center">
-          <Form
-            className="w-full"
-            method="get"
-            onChange={(e) => submit(e.currentTarget)}
-          >
+        <div className="flex gap-4 w-full items-start">
+          <div className="w-full flex flex-col gap-1">
             <Input
+              id="q"
               type="search"
               name="q"
               placeholder="Search users..."
               defaultValue={q || ""}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setQuery(e.target.value)
+              }
             />
-          </Form>
+            {isDebouncing && <span>Searching...</span>}
+          </div>
           <Link to="/users/create">
-            <Button className="">Add New User</Button>
+            <Button>Add New User</Button>
           </Link>
         </div>
         <UserList users={users} />

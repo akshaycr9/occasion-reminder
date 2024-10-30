@@ -9,7 +9,6 @@ export const loader: LoaderFunction = async ({
   params,
 }: LoaderFunctionArgs) => {
   const user = await getUserById(Number(params.userId));
-  console.log(user);
   return json({ user });
 };
 
