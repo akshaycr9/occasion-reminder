@@ -8,6 +8,7 @@ import {
   Form,
   useSubmit,
   useLocation,
+  redirect,
 } from "@remix-run/react";
 import { getAllUsers } from "prisma/user";
 import { FormEvent, useEffect, useState } from "react";
@@ -16,6 +17,7 @@ import { Input } from "~/components/ui/input";
 import UserList from "~/components/UserList";
 import { useDebounce } from "~/hooks/useDebounce";
 import { User } from "~/interface/user.interface";
+import { authenticator } from "~/modules/auth/auth.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -25,6 +27,10 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const session = await authenticator.isAuthenticated(request, {
+    failureRedirect: "/login",
+  });
+  if (!session) return redirect("/login");
   const url = new URL(request.url);
   const q = url.searchParams.get("q") || "";
   const users = await getAllUsers(q);

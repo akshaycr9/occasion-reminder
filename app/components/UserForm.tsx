@@ -15,7 +15,7 @@ export default function UserForm({
   const navigate = useNavigate();
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">Create User</h1>
+      <h1 className="text-2xl font-bold">{user ? "Edit User" : "New User"}</h1>
       <Form method="post" className="grid grid-cols-2 gap-4">
         <div>
           <Label

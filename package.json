@@ -39,6 +39,8 @@
     "react-day-picker": "8.10.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.53.1",
+    "remix-auth": "^3.7.0",
+    "remix-auth-totp": "^3.4.2",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"
