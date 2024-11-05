@@ -8,7 +8,6 @@ export const getAllUsers = async (q?: string) => {
   let users;
   if (!q) {
     if (cache.has("users")) {
-      console.log("Cache hit");
       return cache.get("users");
     } else {
       users = await prisma.user.findMany();
