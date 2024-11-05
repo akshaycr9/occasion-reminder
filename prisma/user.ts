@@ -1,41 +1,77 @@
 import { User } from "~/interface/user.interface";
 import { prisma } from "~/lib/db.server";
+import NodeCache from "node-cache";
+
+const cache = new NodeCache({ stdTTL: 60 });
 
 export const getAllUsers = async (q?: string) => {
-    return await prisma.user.findMany({
-        where: {
-            OR: [
-                {firstName: {contains: q}},
-                {lastName: {contains: q}}
-            ]
-        },
-        select: {
-            id: true,
-            firstName: true,
-            lastName: true
-        }
-    })
-}
+  let users;
+  if (!q) {
+    if (cache.has("users")) {
+      console.log("Cache hit");
+      return cache.get("users");
+    } else {
+      users = await prisma.user.findMany();
+      cache.set("users", users);
+      cache.ttl("users", 60 * 60 * 24);
+      return users;
+    }
+  } else {
+    users = await prisma.user.findMany({
+      where: {
+        OR: [{ firstName: { contains: q } }, { lastName: { contains: q } }],
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+    });
+    return users;
+  }
+};
 
 export const getUserById = async (id: number) => {
-    return await prisma.user.findUnique({
-        where: {
-            id
-        }
-    });
-}
+  if (cache.has(id)) {
+    return cache.get(id);
+  }
 
-export const createUser = async (user: Omit<User, "id">) => await prisma.user.create({data: user});
-
-export const updateUser = async(userId: number, user: Omit<User, "id" | "createdAt" | "updatedAt">) => await prisma.user.update({
+  const user = await prisma.user.findUnique({
     where: {
-        id: userId
+      id,
     },
-    data: user
-})
+  });
 
-export const deleteUser = async (userId: number) => await prisma.user.delete({
+  cache.set(id, user);
+  cache.ttl(id, 60 * 60 * 24);
+  return user;
+};
+
+export const createUser = async (user: Omit<User, "id">) => {
+  const newUser = await prisma.user.create({ data: user });
+  cache.take("users");
+  return newUser;
+};
+
+export const updateUser = async (
+  userId: number,
+  user: Omit<User, "id" | "createdAt" | "updatedAt">
+) => {
+  const updatedUser = await prisma.user.update({
     where: {
-        id: userId
-    }
-})
+      id: userId,
+    },
+    data: user,
+  });
+  cache.take(userId);
+  return updatedUser;
+};
+
+export const deleteUser = async (userId: number) => {
+  await prisma.user.delete({
+    where: {
+      id: userId,
+    },
+  });
+  cache.take("users");
+};

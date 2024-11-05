@@ -10,7 +10,7 @@ import {
   useLocation,
 } from "@remix-run/react";
 import { getAllUsers } from "prisma/user";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import UserList from "~/components/UserList";
@@ -64,17 +64,20 @@ export default function Users() {
       <aside className="w-1/4 p-4 border-r flex flex-col gap-4">
         <div className="flex gap-4 w-full items-start">
           <div className="w-full flex flex-col gap-1">
-            <Input
-              id="q"
-              type="search"
-              name="q"
-              placeholder="Search users..."
-              defaultValue={q || ""}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setQuery(e.target.value)
+            <Form
+              onChange={(event: FormEvent<HTMLFormElement>) =>
+                setQuery((event.target as HTMLInputElement).value)
               }
-            />
-            {isDebouncing && <span>Searching...</span>}
+            >
+              <Input
+                id="q"
+                type="search"
+                name="q"
+                placeholder="Search users..."
+                defaultValue={q || ""}
+              />
+              {isDebouncing && <span>Searching...</span>}
+            </Form>
           </div>
           <Link to="/users/create">
             <Button>Add New User</Button>
