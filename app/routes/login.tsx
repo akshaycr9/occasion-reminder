@@ -41,12 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   await authenticator.authenticate("TOTP", request, {
-    // The `successRedirect` route will be used to verify the OTP code.
-    // This could be the current pathname or any other route that renders the verification form.
     successRedirect: "/verify",
-
-    // The `failureRedirect` route will be used to render any possible error.
-    // This could be the current pathname or any other route that renders the login form.
     failureRedirect: "/login",
   });
 };
@@ -68,9 +63,11 @@ export default function LoginForm() {
           <Form method="post">
             <div className="space-y-6">
               <Input
-                type="email"
+                type="text"
                 name="email"
                 placeholder="Please enter your email"
+                required
+                autoComplete="off"
               />
               <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? (

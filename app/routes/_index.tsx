@@ -2,6 +2,7 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 import { User } from "~/interface/user.interface";
+import { requireAuthentication } from "~/lib/auth.utils";
 import { authenticator } from "~/modules/auth/auth.server";
 
 export const meta: MetaFunction = () => {
@@ -12,10 +13,7 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
-  });
-  return session as User;
+  return await requireAuthentication(request);
 }
 
 export default function Index() {

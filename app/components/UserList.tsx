@@ -7,7 +7,7 @@ export default function UserList({ users }: { users: User[] }) {
   }
 
   return (
-    <ul className="flex flex-col gap-2 h-full overflow-y-auto">
+    <ul className="flex flex-col gap-2 h-full overflow-y-auto py-2">
       {users.map((user) => (
         <li key={user.id}>
           <NavLink
