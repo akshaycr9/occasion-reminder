@@ -74,3 +74,11 @@ export const deleteUser = async (userId: number) => {
   });
   cache.take("users");
 };
+
+export const checkUserByEmail = async (email: string) => {
+  return await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+};

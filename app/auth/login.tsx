@@ -1,5 +1,10 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, MetaFunction, useNavigation } from "@remix-run/react";
+import {
+  Form,
+  MetaFunction,
+  useActionData,
+  useNavigation,
+} from "@remix-run/react";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
@@ -13,6 +18,7 @@ import {
 } from "~/components/ui/card";
 import { authenticator } from "~/modules/auth/auth.server";
 import { commitSession, getSession } from "~/modules/auth/session.server";
+import { checkUserByEmail } from "prisma/user";
 
 export const meta: MetaFunction = () => {
   return [
@@ -40,15 +46,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.clone().formData();
+  const email = formData.get("email");
+  const userExist = await checkUserByEmail(email as string);
+  if (!userExist) {
+    return json({ error: "User does not exist" }, { status: 404 });
+  }
+
   await authenticator.authenticate("TOTP", request, {
     successRedirect: "/verify",
     failureRedirect: "/login",
+    context: { formData },
   });
 };
 
 export default function LoginForm() {
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
+  const actionData = useActionData<typeof action>();
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -61,14 +76,19 @@ export default function LoginForm() {
         </CardHeader>
         <CardContent>
           <Form method="post">
-            <div className="space-y-6">
-              <Input
-                type="text"
-                name="email"
-                placeholder="Please enter your email"
-                required
-                autoComplete="off"
-              />
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col">
+                <Input
+                  type="email"
+                  name="email"
+                  placeholder="Please enter your email"
+                  required
+                  autoComplete="off"
+                />
+                {actionData?.error && (
+                  <p className="text-sm text-red-500">{actionData.error}</p>
+                )}
+              </div>
               <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
