@@ -62,7 +62,7 @@ export default function Users() {
   }, [debouncedQuery]);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-full overflow-auto">
       <aside className="w-1/4 p-4 border-r flex flex-col gap-4">
         <div className="flex gap-4 w-full items-start">
           <div className="w-full flex flex-col gap-1">

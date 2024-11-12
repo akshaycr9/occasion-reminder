@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            background-color: #ff69b4;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+        .content {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #666666;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .name {
+            font-weight: bold;
+        }
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Happy Birthday!</h1>
+        </div>
+        <div class="content">
+            <p class="name">Dear <%= name %>,</p>
+            <p>Wishing you a fantastic birthday filled with joy, laughter, and unforgettable moments!</p>
+            <p>May this special day bring you everything you desire and more. Here's to another year of amazing adventures and beautiful memories.</p>
+            <img src="<%= image %>" alt="Birthday celebration" style="display: block; margin: 20px auto;">
+            <p>Enjoy your day to the fullest!</p>
+            <!-- <p>Best wishes,</p> -->
+            <!-- <p>[Your Name/Company Name]</p> -->
+        </div>
+        <!-- <div class="footer">
+            <p>This email was sent to [recipient@email.com]. If you no longer wish to receive these emails, you can <a href="#">unsubscribe</a>.</p>
+        </div> -->
+    </div>
+</body>
+</html>

@@ -1,9 +1,5 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { Form, Link, useLoaderData } from "@remix-run/react";
-import { Button } from "~/components/ui/button";
-import { User } from "~/interface/user.interface";
 import { requireAuthentication } from "~/lib/auth.utils";
-import { authenticator } from "~/modules/auth/auth.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,21 +13,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Index() {
-  const user = useLoaderData<typeof loader>();
-
   return (
-    <div className="flex h-screen items-center justify-center">
+    <div className="flex h-full items-center justify-center">
       <div className="flex flex-col items-center gap-16">
-        <header className="flex flex-col items-center gap-9">
-          <h1 className="leading text-2xl font-bold text-gray-800 dark:text-gray-100">
-            Welcome to Occasion Reminders
-          </h1>
-          <p>You are currently logged in as: {user.email}</p>
-          <Form method="post" action="/logout">
-            <Button type="submit">Logout</Button>
-          </Form>
-          <Link to="/users">Users</Link>
-        </header>
+        <h1 className="leading text-2xl font-bold text-gray-800 dark:text-gray-100">
+          Welcome to Occasion Reminders
+        </h1>
       </div>
     </div>
   );

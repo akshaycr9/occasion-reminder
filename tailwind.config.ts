@@ -5,16 +5,26 @@ export default {
   content: ["./app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      fontSize: {
+        xs: ["0.625rem", "0.75rem"],
+        sm: ["0.75rem", "1rem"],
+        base: ["0.875rem", "1.25rem"],
+        lg: ["1rem", "1.5rem"],
+        xl: ["1.25rem", "2rem"],
+        "2xl": ["1.5rem", "2.25rem"],
+        "3xl": ["1.75rem", "3rem"],
+        "4xl": ["2rem", "3.5rem"],
+      },
       fontFamily: {
-        sans: [
-          'Inter"',
+        "plus-jakarta-sans": [
+          "Plus Jakarta Sans",
+          "sans-serif",
           "ui-sans-serif",
           "system-ui",
-          "sans-serif",
-          'Apple Color Emoji"',
-          'Segoe UI Emoji"',
-          'Segoe UI Symbol"',
-          'Noto Color Emoji"',
+          "Apple Color Emoji",
+          "Segoe UI Emoji",
+          "Segoe UI Symbol",
+          "Noto Color Emoji",
         ],
       },
       borderRadius: {
@@ -66,8 +76,12 @@ export default {
       },
       keyframes: {
         "caret-blink": {
-          "0%,70%,100%": { opacity: "1" },
-          "20%,50%": { opacity: "0" },
+          "0%,70%,100%": {
+            opacity: "1",
+          },
+          "20%,50%": {
+            opacity: "0",
+          },
         },
       },
       animation: {
