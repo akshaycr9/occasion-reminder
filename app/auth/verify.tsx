@@ -1,6 +1,6 @@
-import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, MetaFunction, useLoaderData } from "@remix-run/react";
+import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
+import { data, redirect } from "react-router";
+import { Form, MetaFunction } from "react-router";
 import { authenticator } from "~/modules/auth/auth.server";
 import { getSession, commitSession } from "~/modules/auth/session.server";
 import {
@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
+import type { Route } from "./+types/verify";
 
 export const meta: MetaFunction = () => {
   return [
@@ -36,7 +37,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!authEmail) return redirect("/login");
 
   // Commit session to clear any `flash` error message.
-  return json(
+  return data(
     { authError },
     {
       headers: {
@@ -56,8 +57,8 @@ export async function action({ request }: ActionFunctionArgs) {
   });
 }
 
-export default function Verify() {
-  const { authError } = useLoaderData<typeof loader>();
+export default function Verify({ loaderData }: Route.ComponentProps) {
+  const authError = loaderData as any;
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

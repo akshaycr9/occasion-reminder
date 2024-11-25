@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import { requireAuthentication } from "~/lib/auth.utils";
 
 export const meta: MetaFunction = () => {

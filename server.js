@@ -5,7 +5,7 @@ import { sendBirthdayEmails } from "./cron-jobs/sendBirthdayEmails.js";
 
 const app = express();
 
-app.use("/build", express.static(path.join(process.cwd(), "public", "build")));
+app.use("/build", express.static(path.join(process.cwd(), "build", "server")));
 
 cron.schedule("* * * * *", async () => {
   await sendBirthdayEmails();
