@@ -1,5 +1,5 @@
-import { ActionFunction } from "@remix-run/node";
-import { json, redirect, useActionData } from "@remix-run/react";
+import { ActionFunction } from "react-router";
+import { redirect, useActionData } from "react-router";
 import { createUser } from "prisma/user";
 import UserForm from "~/components/UserForm";
 import { User } from "~/interface/user.interface";
@@ -18,7 +18,7 @@ export const action: ActionFunction = async ({ request }) => {
     let data = Object.fromEntries(formData);
     const parsed = UserSchema.safeParse(data);
     if (!parsed.success) {
-      return json({ error: parsed.error?.flatten().fieldErrors });
+      return { error: parsed.error?.flatten().fieldErrors };
     }
 
     const parsedData = parsed.data;

@@ -1,4 +1,4 @@
-import { NavLink } from "@remix-run/react";
+import { NavLink } from "react-router";
 import { User } from "~/interface/user.interface";
 
 export default function UserList({ users }: { users: User[] }) {

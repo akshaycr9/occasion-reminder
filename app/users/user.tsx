@@ -1,15 +1,16 @@
-import { User } from "@prisma/client";
-import { LoaderFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, json, Link, redirect, useLoaderData } from "@remix-run/react";
+import { LoaderFunction, LoaderFunctionArgs } from "react-router";
+import { Form, Link, redirect } from "react-router";
 import { deleteUser, getUserById } from "prisma/user";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import type { Route } from "./+types/user";
+import { User } from "~/interface/user.interface";
 
 export const loader: LoaderFunction = async ({
   params,
 }: LoaderFunctionArgs) => {
   const user = await getUserById(Number(params.userId));
-  return json({ user });
+  return user;
 };
 
 export const action = async ({ request, params }: LoaderFunctionArgs) => {
@@ -19,10 +20,8 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
   return redirect("/users");
 };
 
-export default function UserData() {
-  const {
-    user: { id, firstName, lastName, email, dob },
-  } = useLoaderData<typeof loader>();
+export default function UserData({ loaderData }: Route.ComponentProps) {
+  const { firstName, lastName, email, dob, id } = loaderData as unknown as User;
 
   return (
     <Card>

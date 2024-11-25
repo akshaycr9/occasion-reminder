@@ -1,5 +1,4 @@
 import {
-  json,
   Links,
   Meta,
   Outlet,
@@ -7,13 +6,12 @@ import {
   ScrollRestoration,
   useLoaderData,
   useMatches,
-} from "@remix-run/react";
+} from "react-router";
 import type {
   LinksFunction,
   LoaderFunction,
   LoaderFunctionArgs,
-} from "@remix-run/node";
-
+} from "react-router";
 import "./tailwind.css";
 import { Navbar } from "./components/Navbar";
 import { getSession } from "./modules/auth/session.server";
@@ -37,7 +35,7 @@ export const loader: LoaderFunction = async ({
 }: LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
   const signedInUser = session.get("user");
-  return json({ user: signedInUser });
+  return { user: signedInUser };
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {

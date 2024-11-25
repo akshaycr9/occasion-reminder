@@ -1,10 +1,5 @@
-import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
-import {
-  Form,
-  MetaFunction,
-  useActionData,
-  useNavigation,
-} from "@remix-run/react";
+import { ActionFunctionArgs, data, LoaderFunctionArgs } from "react-router";
+import { Form, MetaFunction, useActionData, useNavigation } from "react-router";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
@@ -35,7 +30,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const authError = session.get(authenticator.sessionErrorKey);
 
   // Commit session to clear any `flash` error message.
-  return json(
+  return data(
     { authError },
     {
       headers: {
@@ -50,7 +45,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const email = formData.get("email");
   const userExist = await checkUserByEmail(email as string);
   if (!userExist) {
-    return json({ error: "User does not exist" }, { status: 404 });
+    return data({ error: "User does not exist" }, { status: 404 });
   }
 
   await authenticator.authenticate("TOTP", request, {

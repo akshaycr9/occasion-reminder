@@ -1,5 +1,5 @@
 import { User } from "@prisma/client";
-import { Form, useNavigate } from "@remix-run/react";
+import { Form, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";

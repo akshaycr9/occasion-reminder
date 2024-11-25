@@ -1,14 +1,13 @@
-import { LoaderFunction } from "@remix-run/node";
+import { LoaderFunction } from "react-router";
 import {
   Link,
   MetaFunction,
   Outlet,
   useLoaderData,
-  json,
   Form,
   useSubmit,
   useLocation,
-} from "@remix-run/react";
+} from "react-router";
 import { getAllUsers } from "prisma/user";
 import { FormEvent, useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
@@ -30,7 +29,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const q = url.searchParams.get("q") || "";
   const users = await getAllUsers(q);
-  return json({ users, q });
+  return { users, q };
 };
 
 export default function Users() {

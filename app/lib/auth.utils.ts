@@ -1,4 +1,4 @@
-import { redirect } from "@remix-run/react";
+import { redirect } from "react-router";
 import { User } from "~/interface/user.interface";
 import { authenticator } from "~/modules/auth/auth.server";
 
