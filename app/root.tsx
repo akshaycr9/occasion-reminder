@@ -37,7 +37,6 @@ export const loader: LoaderFunction = async ({
 }: LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
   const signedInUser = session.get("user");
-  console.log("signedInUser is ======", signedInUser);
   return json({ user: signedInUser });
 };
 
@@ -60,7 +59,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="font-plus-jakarta-sans">
-        <div className="min-h-screen min-w-screen flex flex-col gap-2">
+        <div className="h-screen w-screen flex flex-col gap-2">
           {showNavbar && <Navbar user={user} />}
           {children}
         </div>
