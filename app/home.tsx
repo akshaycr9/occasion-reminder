@@ -1,14 +1,15 @@
 import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import { requireAuthentication } from "~/lib/auth.utils";
+import type { Route } from "./+types/home";
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [
     { title: "Occasion Reminder" },
     { name: "description", content: "Occasion Reminder" },
   ];
 };
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   return await requireAuthentication(request);
 }
 

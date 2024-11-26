@@ -4,20 +4,15 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
   useMatches,
-} from "react-router";
-import type {
-  LinksFunction,
-  LoaderFunction,
-  LoaderFunctionArgs,
 } from "react-router";
 import "./tailwind.css";
 import { Navbar } from "./components/Navbar";
 import { getSession } from "./modules/auth/session.server";
 import { User } from "./interface/user.interface";
+import type { Route } from "./+types/root";
 
-export const links: LinksFunction = () => [
+export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
@@ -30,24 +25,13 @@ export const links: LinksFunction = () => [
   },
 ];
 
-export const loader: LoaderFunction = async ({
-  request,
-}: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
   const signedInUser = session.get("user");
   return { user: signedInUser };
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const matches = useMatches();
-  const hideNavbarRoutes = ["/login", "/verify"];
-
-  const showNavbar = !matches.some((match) =>
-    hideNavbarRoutes.includes(match.pathname)
-  );
-
-  const { user } = useLoaderData<typeof loader>() as { user: User | undefined };
-
   return (
     <html lang="en">
       <head>
@@ -57,10 +41,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="font-plus-jakarta-sans">
-        <div className="h-screen w-screen flex flex-col gap-2">
-          {showNavbar && <Navbar user={user} />}
-          {children}
-        </div>
+        {children}
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -68,6 +49,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
-  return <Outlet />;
+export default function App({ loaderData }: Route.ComponentProps) {
+  const matches = useMatches();
+  const hideNavbarRoutes = ["/login", "/verify"];
+
+  const showNavbar = !matches.some((match) =>
+    hideNavbarRoutes.includes(match.pathname)
+  );
+
+  const { user } = loaderData as { user: User | undefined };
+
+  return (
+    <div className="h-screen w-screen flex flex-col gap-2">
+      {showNavbar && <Navbar user={user} />}
+      <Outlet />
+    </div>
+  );
 }
